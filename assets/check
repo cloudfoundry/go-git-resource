@@ -161,7 +161,7 @@ else
     git commit -am "go mod vendor"
     git push origin HEAD
     latest_commit_sha=$(git rev-parse HEAD)
-    echo $output | jq '.[. | length] |= . + {"ref": "$latest_commit_sha"}' >&3
+    echo $output | jq ".[. | length] |= . + {'ref': '$latest_commit_sha'}" >&3
   else
     echo $output >&3
   fi
