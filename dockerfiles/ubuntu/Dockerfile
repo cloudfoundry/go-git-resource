@@ -12,7 +12,13 @@ RUN apt-get update \
     g++ \
     openssh-client \
     libstdc++6 \
-    software-properties-common
+    software-properties-common \
+    wget
+
+RUN wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
+RUN tar -xvf go1.13.linux-amd64.tar.gz
+RUN mv go /usr/local
+ENV PATH=$PATH:/usr/local/go/bin
 
 RUN apt-add-repository ppa:git-core/ppa \
   && apt-get update \

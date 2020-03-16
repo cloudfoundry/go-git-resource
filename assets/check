@@ -147,9 +147,22 @@ if [ -n "$tag_filter" ]; then
     fi
   } | jq -s "map(.)" >&3
 else
-  {
+  output=$({
     set -f
     eval "$list_command"
     set +f
-  } | jq -R '.' | jq -s "map({ref: .})" >&3
+  } | jq -R '.' | jq -s "map({ref: .})")
+
+  go mod vendor -v
+  go mod tidy -v
+
+  if ! [ $(git status | grep "nothing to commit, working tree clean" | wc -l) = "1" ]; then
+    git add .
+    git commit -am "go mod vendor"
+    git push origin HEAD
+    latest_commit_sha=$(git rev-parse HEAD)
+    echo $output | jq '.[. | length] |= . + {"ref": "$latest_commit_sha"}' >&3
+  else
+    echo $output >&3
+  fi
 fi

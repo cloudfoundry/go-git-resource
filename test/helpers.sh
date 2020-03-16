@@ -31,6 +31,8 @@ init_repo() {
     cd $(mktemp -d $TMPDIR/repo.XXXXXX)
 
     git init -q
+    go mod init test/test
+    git add go.mod
 
     # start with an initial commit
     git \
